@@ -1,9 +1,10 @@
-
+import org.xml.sax.SAXException;
 
 public class CryptoManager {
 	
 	private static final char LOWER_BOUND = ' ';
 	private static final char UPPER_BOUND = '_';
+	private static final char OFFSET_UPPER_BOUND = UPPER_BOUND-LOWER_BOUND;
 	private static final int RANGE = UPPER_BOUND - LOWER_BOUND + 1;
 
 	/**
@@ -12,9 +13,26 @@ public class CryptoManager {
 	 * @param plainText a string to be encrypted, if it is within the allowable bounds
 	 * @return true if all characters are within the allowable bounds, false if any character is outside
 	 */
-	public static boolean stringInBounds (String plainText) {
-		throw new RuntimeException("method not implemented");
+	public static boolean stringInBounds (String plainText) /*throws SAXException*/ {
+		int length = plainText.length();
+		int val;
+
+		    for(int i=0; i < length; i++) {
+		       val= plainText.charAt(i) - LOWER_BOUND;
+		       if(val > OFFSET_UPPER_BOUND) return false;
+		       }
+		return true;
+	
 	}
+
+	public void characters(char ch[], int start, int length) throws SAXException {
+	    for(int i=start, end = start+ length; i < end; i++) {
+	       if(ch[i] <= ' ') {
+	          // check if it is a white space
+	       }
+	    }
+	}
+	
 
 	/**
 	 * Encrypts a string according to the Caesar Cipher.  The integer key specifies an offset
