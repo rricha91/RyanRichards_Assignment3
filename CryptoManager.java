@@ -1,10 +1,9 @@
-import org.xml.sax.SAXException;
+
 
 public class CryptoManager {
 	
 	private static final char LOWER_BOUND = ' ';
 	private static final char UPPER_BOUND = '_';
-	private static final char OFFSET_UPPER_BOUND = UPPER_BOUND-LOWER_BOUND;
 	private static final int RANGE = UPPER_BOUND - LOWER_BOUND + 1;
 
 	/**
@@ -13,26 +12,15 @@ public class CryptoManager {
 	 * @param plainText a string to be encrypted, if it is within the allowable bounds
 	 * @return true if all characters are within the allowable bounds, false if any character is outside
 	 */
-	public static boolean stringInBounds (String plainText) /*throws SAXException*/ {
-		int length = plainText.length();
-		int val;
-
-		    for(int i=0; i < length; i++) {
-		       val= plainText.charAt(i) - LOWER_BOUND;
-		       if(val > OFFSET_UPPER_BOUND) return false;
-		       }
+	public static boolean stringInBounds (String plainText) {
+		char ch;
+		int length=plainText.length();
+		for (int i = 0; i<length;i++) {
+			ch = (char) (plainText.charAt(i) - LOWER_BOUND);
+			if (ch>RANGE) return false;
+		}
 		return true;
-	
 	}
-
-	public void characters(char ch[], int start, int length) throws SAXException {
-	    for(int i=start, end = start+ length; i < end; i++) {
-	       if(ch[i] <= ' ') {
-	          // check if it is a white space
-	       }
-	    }
-	}
-	
 
 	/**
 	 * Encrypts a string according to the Caesar Cipher.  The integer key specifies an offset
@@ -42,7 +30,14 @@ public class CryptoManager {
 	 * @return the encrypted string
 	 */
 	public static String encryptCaesar(String plainText, int key) {
-		throw new RuntimeException("method not implemented");
+		int length = plainText.length();
+		String en="";
+		char ch;
+		for (int i=0; i<length; i++) {
+			ch = (char)(plainText.charAt(i)+key);
+			en+=ch;
+		}
+		return en;
 	}
 	
 	/**
@@ -54,7 +49,23 @@ public class CryptoManager {
 	 * @return the encrypted string
 	 */
 	public static String encryptBellaso(String plainText, String bellasoStr) {
-		throw new RuntimeException("method not implemented");
+		int length = plainText.length();
+		int bellLength = bellasoStr.length();
+		String plain="";
+		char ch;
+		char bell;
+		for (int j=0; j<length;) {
+			for (int i=0; i<bellLength; i++) {
+				
+				if (i==length) return plain;
+				
+				bell = bellasoStr.charAt(i);
+				ch = (char)(plainText.charAt(j++)+bell);
+				
+				plain+=ch;
+			}
+		}
+		return plain;
 	}
 	
 	/**
@@ -66,7 +77,16 @@ public class CryptoManager {
 	 * @return the plain text string
 	 */
 	public static String decryptCaesar(String encryptedText, int key) {
-		throw new RuntimeException("method not implemented");
+		int length = encryptedText.length();
+		String plain="";
+		char ch;
+		for (int i=0; i<length; i++) {
+			ch = (char)(encryptedText.charAt(i)-LOWER_BOUND-key);
+			if (ch>RANGE) ch-=RANGE*(ch/RANGE);
+			ch += LOWER_BOUND;
+			plain+=ch;
+		}
+		return plain;
 	}
 	
 	/**
@@ -78,6 +98,24 @@ public class CryptoManager {
 	 * @return the decrypted string
 	 */
 	public static String decryptBellaso(String encryptedText, String bellasoStr) {
-		throw new RuntimeException("method not implemented");
+		int length = encryptedText.length();
+		int bellLength = bellasoStr.length();
+		String plain="";
+		char ch;
+		char bell;
+		for (int j=0; j<length;) {
+			for (int i=0; i<bellLength; i++) {
+				
+				if (i==length) return plain;
+				
+				bell = bellasoStr.charAt(i);
+				ch = (char)(encryptedText.charAt(j++)-LOWER_BOUND-bell);
+				if (ch>RANGE) ch-=RANGE*(ch/RANGE);
+				ch += LOWER_BOUND;
+				
+				plain+=ch;
+			}
+		}
+		return plain;
 	}
 }
